@@ -34,6 +34,10 @@ class Author(models.Model):
 
     def get_absolute_url(self):
         return reverse("Author_detail", kwargs={"pk": self.pk})
+    
+    def display_books(self):
+        return ", ".join(book.title for book in self.books.all()[:3])
+    display_books.short_description = _("books")
 
 class Book(models.Model):
     title = models.CharField(_("title"), max_length=250, db_index=True)
@@ -60,7 +64,10 @@ class Book(models.Model):
 
     def get_absolute_url(self):
         return reverse("book_detail", kwargs={"pk": self.pk})
-
+    
+    def display_genre(self):
+        return ",".join(genre.name for genre in self.genre.all()[:3])
+    display_genre.short_description = _('genre')
 
 LOAN_STATUS = (
     (0, _("available")),
