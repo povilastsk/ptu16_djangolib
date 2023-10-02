@@ -1,0 +1,10 @@
+body { font-family: sans-serif; background-color: #CCCCCC; }
+        h1, h2 { 
+            border-bottom: 2px solid #FFCC00; 
+            box-shadow: 0 3px 5px #00000033; 
+            padding: 1rem;
+            background-color: #D8D8D8;
+        }
+        p {
+            padding: 0 rem
+        }
