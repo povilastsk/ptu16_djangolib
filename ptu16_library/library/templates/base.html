@@ -6,12 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}PTU16 Library{% endblock title %}</title>
     <link rel="stylesheet" href="{% static "css/base_style.css" %}">
-    <style>
-        
-    </style>
+    <style></style>
 </head>
 <body>
-    {% block content %}
-    {% endblock content %}
+    <header>
+        <ul class="nav">
+            <li class="logo">PTU16 Library</li>
+            <li><a href="{% url "index" %}">Home</a></li>
+            <li><a href="{% url "index" %}">Authors</a></li>
+            <li><a href="{% url "index" %}">Books</a></li>
+        </ul>
+    </header>
+    <main>
+        {% block content %}
+        {% endblock content %}
+    </main>
+    <footer>
+        <p>&copy; 2023 PTU16 Library</p>
+    </footer>
 </body>
 </html>
