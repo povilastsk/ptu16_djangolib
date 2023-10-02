@@ -1,7 +1,13 @@
-from django.http import HttpResponse
 from django.shortcuts import render
+from . import models
 
-# Create your views here.
 
 def index(request):
-    return HttpResponse("Laba diena :)")
+    context = {
+        "num_books": models.Book.objects.count(),
+        "num_instances": models.Bookinstance.objects.count(),
+        "num_available": models.Bookinstance.objects.filter(status=0).count(),
+        "num_authors": models.Author.objects.count(),
+        "genres": models.Genre.objects.all(),
+    }
+    return render(request, "library/index.html", context)
