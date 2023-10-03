@@ -1,5 +1,11 @@
 from django.shortcuts import render, get_object_or_404
+from django.views import generic
 from . import models
+
+
+class BookListView(generic.ListView):
+    model = models.Book
+    template_name = "library/book_list.html"
 
 
 def index(request):
@@ -20,10 +26,11 @@ def authors(request):
         {"author_list": models.Author.objects.all()}
     )
 
-
 def author_detail(request, pk):
     return render(
         request,
         "library/author_detail.html",
         {"author": get_object_or_404(models.Author, pk=pk)}
     )
+
+
