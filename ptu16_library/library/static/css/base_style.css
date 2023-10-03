@@ -54,13 +54,24 @@ ul.nice-list {
     padding-inline-start: 0;
     padding: 0.5rem;
     margin: 1rem;
-    border:  1px solid #ccbbaa;
-    background-color: #c0c0c0 ;
+    border: 1px solid #ccaa77;
+    background-color: #c0c0c0;
     box-shadow: 1px 3px 5px #00000033;
-
 }
-ul.nice-list li{
-    margin: 0.5rem, 0;
+ul.nice-list li {
+    margin: 0.25rem 0;
     padding: 0.25rem 0.5rem;
-    border: 1px solid #ccbbaa
+    border-bottom: 1px solid #ccaa77;
+}
+ul.nice-list a {
+    display: inline-block;
+    color: #cb5800;
+    text-decoration: none;
+}
+ul.nice-list a:hover{
+    color: #d5700d;
+}
+.info {
+    padding: 0 1rem;
+    margin: 1rem 0;
 }

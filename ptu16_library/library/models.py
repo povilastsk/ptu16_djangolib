@@ -23,6 +23,7 @@ class Genre(models.Model):
 class Author(models.Model):
     first_name = models.CharField(_("first name"), max_length=100, db_index=True)
     last_name = models.CharField(_("last name"), max_length=100, db_index=True)
+    bio = models.TextField(_("Bio"), max_length=4000, default="", blank=True)
 
     class Meta:
         verbose_name = _("author")
