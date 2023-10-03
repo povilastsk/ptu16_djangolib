@@ -1,14 +1,14 @@
 {% extends "base.html" %}
-{% block title %}Authors in{{block.super}}{% endblock title %}
+{% block title %}Authors in {{ block.super }}{% endblock title %}
 {% block content %}
 <h1>Authors</h1>
 {% if author_list %}
-    <ul class="nice-list"></ul>
-    {% for author in author_list %}
-        <li>{{ author }}</li>
-    {% endfor %}
+    <ul class="nice-list">
+        {% for author in author_list %}
+            <li><a href="{% url "author_detail" author.pk %}">{{ author }}</a></li>
+        {% endfor %}
     </ul>
 {% else %}
-    <p>No authors of any books found</p>
+    <p>No authors of any books found.</p>
 {% endif %}
-{% endblock content%}
+{% endblock content %}

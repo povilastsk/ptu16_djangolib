@@ -23,7 +23,7 @@ class Genre(models.Model):
 class Author(models.Model):
     first_name = models.CharField(_("first name"), max_length=100, db_index=True)
     last_name = models.CharField(_("last name"), max_length=100, db_index=True)
-    bio = models.TextField(_("Bio"), max_length=4000, default="", blank=True)
+    bio = models.TextField(_("Bio"), max_length=4000, default='', blank=True)
 
     class Meta:
         verbose_name = _("author")
@@ -31,15 +31,15 @@ class Author(models.Model):
         ordering = ["last_name", "first_name"]
 
     def __str__(self):
-        return f'{self.first_name} {self.last_name}'
+        return f"{self.first_name} {self.last_name}"
 
     def get_absolute_url(self):
-        return reverse("Author_detail", kwargs={"pk": self.pk})
+        return reverse("author_detail", kwargs={"pk": self.pk})
     
     def display_books(self):
         return ", ".join(book.title for book in self.books.all()[:3])
-    display_books.short_description = _("books")
-
+    display_books.short_description = _('books')
+    
 class Book(models.Model):
     title = models.CharField(_("title"), max_length=250, db_index=True)
     author = models.ForeignKey(
