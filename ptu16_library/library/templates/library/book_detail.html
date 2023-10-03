@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% block title %}{{ book.title }} at {{ block.super }}{% endblock title %}
+{% block content %}
+<h1>{{ book.title }}</h1>
+<p>by <a href="{% url "author_detail" book.author.pk %}">{{ book.author }}</a></p>
+<p>Genre(s): 
+    {% for genre in book.genre.all %}
+        <span class="tag">{{ genre }}</span>
+    {% empty %}
+        None
+    {% endfor %}</p>
+{% if book.summary %}
+    <h2>Summary</h2>
+    <p>{{ book.summary }}</p>
+{% endif %}
+{% if book.instances.all %}
+<h2>Instances</h2>
+    <table class="book-instances center">
+        <tr>
+            <th>Unique ID</th>
+            <th>Status</th>
+            <th>Available from</th>
+        </tr>
+        {% for instance in book.instances.all %}
+            <tr class="data-row">
+                <td>{{ instance.unique_id }}</td>
+                <td>{{ instance.get_status_display }}</td>
+                <td>{% if instance.due_back %}{{ instance.due_back }}{% else %}NOW{% endif %}</td>
+            </tr>
+        {% endfor %}
+    </table>
+{% endif %}
+{% endblock content %}

@@ -63,15 +63,35 @@ ul.nice-list li {
     padding: 0.25rem 0.5rem;
     border-bottom: 1px solid #ccaa77;
 }
-ul.nice-list a {
-    display: inline-block;
+a {
     color: #cb5800;
     text-decoration: none;
 }
-ul.nice-list a:hover {
+a:hover {
     color: #ed6700;
 }
 .info {
     padding: 0 1rem;
     margin: 1rem 0;
+}
+.tag {
+    margin: 0 0.1rem;
+    padding: 0.25rem 0.5rem;
+    border: 1px solid #ccaa77;
+    background-color: #d8d8d8;
+}
+table.book-instances {
+    width: 100%;
+}
+table.book-instances td, th {
+    padding: 0.25rem 0.5rem;
+}
+.center {
+    text-align: center;
+}
+table tr.data-row {
+    background-color: #d8d8d8;
+}
+table tr.data-row:hover {
+    background-color: #dddddd;
 }
