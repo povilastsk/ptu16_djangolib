@@ -11,3 +11,11 @@ def index(request):
         "genres": models.Genre.objects.all(),
     }
     return render(request, "library/index.html", context)
+
+
+def authors(request):
+    return render(
+        request, 
+        "library/author_list.html", 
+        {"author_list": models.Author.objects.all()}
+    )
