@@ -47,6 +47,16 @@ h1, h2, h3 {
 p {
     padding: 0 1rem;
 }
+ul.card-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    list-style-type: none;
+    padding-inline-start: 0;
+    padding: 0;
+    margin: 1rem;
+    gap: 1rem;
+}
 ul.nice-list {
     display: flex;
     flex-direction: column;
@@ -62,6 +72,20 @@ ul.nice-list li {
     margin: 0.25rem 0;
     padding: 0.25rem 0.5rem;
     border-bottom: 1px solid #ccaa77;
+}
+ul.card-list li {
+    border: 1px solid #ccaa77;
+    background-color: #c0c0c0;
+    box-shadow: 1px 3px 5px #00000033;
+    border-radius: 1rem;
+    max-width: 30vw;
+}
+ul.card-list h4 {
+    margin: 1rem;
+    font-size: large;
+}
+ul.card-list li:hover {
+    background-color: #e0e0e0;
 }
 a {
     color: #cb5800;
@@ -102,11 +126,17 @@ div.pager a {
     border: 1px solid #ccaa77;
     background-color: #d8d8d8;
     border-radius: 0.25rem;
-    padding: 0.25rem
+    padding: 0.25rem;
 }
 div.pager a:hover {
     background-color: #dddddd;
 }
 div.pager form {
     display: inline-block;
+}
+img.book-cover {
+    margin: 1rem 1rem 0;
+    border: 2px solid #999999;
+    border-radius: 1rem;
+    max-width: calc(100% - 2rem);
 }

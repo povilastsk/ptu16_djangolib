@@ -53,6 +53,7 @@ class Book(models.Model):
         verbose_name=_("genres"),
         related_name="books",
     )
+    cover = models.ImageField(_("cover"), upload_to='book_covers', null=True, blank=True)
     summary = models.TextField(_("summary"))
 
     class Meta:
