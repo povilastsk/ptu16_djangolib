@@ -2,7 +2,7 @@
 {% block title %}Books in {{ block.super }}{% endblock title %}
 {% block content %}
 <h1>Books</h1>
-<p>{{ insight }}</p>
+{% include "library/inc/pager_prev_next.html" %}
 <ul class="nice-list">
 {% for book in book_list %}
     <li><a href="{% url "book_detail" book.pk %}">{{ book.title }}</a> 
@@ -11,4 +11,5 @@
     <p>No books found.</p>
 {% endfor %}
 </ul>
+{% include "library/inc/pager_pages.html" %}
 {% endblock content %}

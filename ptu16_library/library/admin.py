@@ -3,7 +3,7 @@ from . import models
 
 
 class BoookInstanceInline(admin.TabularInline):
-    model = models.Bookinstance
+    model = models.BookInstance
     readonly_fields = ("unique_id", )
     can_delete = False
     extra = 0
@@ -14,7 +14,7 @@ class BookAdmin(admin.ModelAdmin):
     inlines = [BoookInstanceInline]
     search_fields = ("title", "summary", "author__last_name")
 
-@admin.register(models.Bookinstance)
+@admin.register(models.BookInstance)
 class BookInstanceAdmin(admin.ModelAdmin):
     list_display = ("unique_id", "book", "status", "due_back")
     list_filter = ('status', "due_back")

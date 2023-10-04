@@ -3,11 +3,17 @@
 {% block content %}
 <h1>Authors</h1>
 {% if author_list %}
+    {% with author_list as page_obj %}
+        {% include "library/inc/pager_prev_next.html" %}
+    {% endwith %}
     <ul class="nice-list">
         {% for author in author_list %}
             <li><a href="{% url "author_detail" author.pk %}">{{ author }}</a></li>
         {% endfor %}
     </ul>
+    {% with author_list as page_obj %}
+        {% include "library/inc/pager_pages.html" %}
+    {% endwith %}
 {% else %}
     <p>No authors of any books found.</p>
 {% endif %}

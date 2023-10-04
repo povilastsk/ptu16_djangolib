@@ -95,3 +95,15 @@ table tr.data-row {
 table tr.data-row:hover {
     background-color: #dddddd;
 }
+div.pager {
+    margin: 0.5rem 1rem;
+}
+div.pager a {
+    border: 1px solid #ccaa77;
+    background-color: #d8d8d8;
+    border-radius: 0.25rem;
+    padding: 0.25rem
+}
+div.pager a:hover {
+    background-color: #dddddd;
+}

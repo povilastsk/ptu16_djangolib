@@ -78,7 +78,7 @@ LOAN_STATUS = (
 )
 
 
-class Bookinstance(models.Model):
+class BookInstance(models.Model):
     unique_id = models.UUIDField(
         _("unique ID"),
         db_index=True,
