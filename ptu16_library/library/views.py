@@ -1,5 +1,6 @@
 from typing import Any
 from django.core.paginator import Paginator
+from django.db.models.query import QuerySet, Q
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from . import models
@@ -9,7 +10,21 @@ class BookListView(generic.ListView):
     model = models.Book
     template_name = 'library/book_list.html'
     paginate_by = 6
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['search'] = True
+        return context
     
+    def get_queryset(self) -> QuerySet[Any]:
+        queryset = super().get_queryset()
+        query = self.request.GET.get('query')
+        if query:
+            queryset = queryset.filter(
+                Q(title__icontains=query) |
+                Q(author__last_name__istartswith=query)
+            )
+        return queryset
 
 class BookDetailView(generic.DetailView):
     model = models.Book
