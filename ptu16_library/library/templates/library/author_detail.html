@@ -5,9 +5,9 @@
 <div class="info">{{ author.bio }}</div>
 <h3>Books</h3>
 {% if author.books.all %}
-    <ul class="nice-list">
+    <ul class="card-list">
     {% for book in author.books.all %}
-        <li>{{ book.title }}</li>
+        {% include "library/inc/book_card.html" %}
     {% endfor %}
     </ul>
 {% else %}

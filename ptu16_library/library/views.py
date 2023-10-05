@@ -1,5 +1,6 @@
 from typing import Any
 from django.core.paginator import Paginator
+from django.http import HttpRequest
 from django.db.models.query import QuerySet, Q
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
@@ -31,17 +32,20 @@ class BookDetailView(generic.DetailView):
     template_name = 'library/book_detail.html'
 
 
-def index(request):
+def index(request: HttpRequest):
+    num_visits = request.session.get('num_visits', 1)
+    request.session['num_visits'] = num_visits + 1
     context = {
         'num_books': models.Book.objects.count(),
         'num_instances': models.BookInstance.objects.count(),
         'num_available': models.BookInstance.objects.filter(status=0).count(),
         'num_authors': models.Author.objects.count(),
         'genres': models.Genre.objects.all(),
+        'num_visits': num_visits,
     }
     return render(request, 'library/index.html', context)
 
-def authors(request):
+def authors(request: HttpRequest):
     author_pages = Paginator(models.Author.objects.all(), 4)
     current_page = request.GET.get('page') or 1
     return render(
@@ -50,7 +54,7 @@ def authors(request):
         {'author_list': author_pages.get_page(current_page)}
     )
 
-def author_detail(request, pk):
+def author_detail(request: HttpRequest, pk: int):
     return render(
         request,
         'library/author_detail.html',
