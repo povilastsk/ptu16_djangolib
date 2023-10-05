@@ -1,9 +1,13 @@
+from datetime import date
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _ 
 from django.urls import reverse
+from tinymce.models import HTMLField
 import uuid
 
-# Create your models here.
+User = get_user_model()
+
 
 class Genre(models.Model):
 
@@ -23,7 +27,7 @@ class Genre(models.Model):
 class Author(models.Model):
     first_name = models.CharField(_("first name"), max_length=100, db_index=True)
     last_name = models.CharField(_("last name"), max_length=100, db_index=True)
-    bio = models.TextField(_("Bio"), max_length=4000, default='', blank=True)
+    bio = HTMLField(_("Bio"), max_length=10000, default='', blank=True)
 
     class Meta:
         verbose_name = _("author")
@@ -54,7 +58,7 @@ class Book(models.Model):
         related_name="books",
     )
     cover = models.ImageField(_("cover"), upload_to='book_covers', null=True, blank=True)
-    summary = models.TextField(_("summary"))
+    summary = HTMLField(_("summary"), max_length=10000, default='', blank=True)
 
     class Meta:
         verbose_name = _("book")
@@ -98,6 +102,12 @@ class BookInstance(models.Model):
     status = models.PositiveSmallIntegerField(
         _("status"), choices=LOAN_STATUS, default=0
     )
+    reader = models.ForeignKey(
+        User, 
+        verbose_name=_("reader"), 
+        on_delete=models.CASCADE,
+        null=True, blank=True,
+    )
 
     class Meta:
         verbose_name = _("book instance")
@@ -111,3 +121,8 @@ class BookInstance(models.Model):
     def get_absolute_url(self):
         return reverse("bookinstance_detail", kwargs={"pk": self.pk})
 
+    @property
+    def is_overdue(self):
+        if self.due_back and self.due_back < date.today():
+            return True
+        return False

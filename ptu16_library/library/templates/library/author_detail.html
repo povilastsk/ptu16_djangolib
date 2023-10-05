@@ -2,7 +2,7 @@
 {% block title %}{{ author }} in {{ block.super }}{% endblock title %}
 {% block content %}
 <h1>{{ author }}</h1>
-<div class="info">{{ author.bio }}</div>
+{{ author.bio|safe }}
 <h3>Books</h3>
 {% if author.books.all %}
     <ul class="card-list">

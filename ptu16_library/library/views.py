@@ -1,5 +1,6 @@
 from typing import Any
 from django.core.paginator import Paginator
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpRequest
 from django.db.models.query import QuerySet, Q
 from django.shortcuts import render, get_object_or_404
@@ -7,6 +8,17 @@ from django.views import generic
 from . import models
 
 
+class UserBookListView(LoginRequiredMixin, generic.ListView):
+    model = models.BookInstance
+    template_name = "library/book_user_list.html"
+    paginate_by = 10
+
+    def get_queryset(self) -> QuerySet[Any]:
+        queryset = super().get_queryset()
+        queryset = queryset.filter(reader=self.request.user)
+        return queryset
+
+    
 class BookListView(generic.ListView):
     model = models.Book
     template_name = 'library/book_list.html'

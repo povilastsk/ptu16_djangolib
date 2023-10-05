@@ -16,13 +16,13 @@ class BookAdmin(admin.ModelAdmin):
 
 @admin.register(models.BookInstance)
 class BookInstanceAdmin(admin.ModelAdmin):
-    list_display = ("unique_id", "book", "status", "due_back")
+    list_display = ("unique_id", "book", "reader", "status", "due_back")
     list_filter = ('status', "due_back")
     readonly_fields = ("unique_id", )
-    search_fields = ("unique_id","book__title", "book__author__last_name")
+    search_fields = ("unique_id", "book__title", "book__author__last_name", "reader__last_name", "reader__user_name")
     fieldsets = (
-        ("Book", {"fields": (("book", "unique_id"),)}),
-        ("Availability", {"fields": (("status", "due_back"),)}),
+        ("Identification", {"fields": (("book", "unique_id"),)}),
+        ("Availability", {"fields": (("status", "reader", "due_back"),)}),
     )
 
 

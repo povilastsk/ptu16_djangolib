@@ -17,7 +17,7 @@
     {% endfor %}</p>
 {% if book.summary %}
     <h2>Summary</h2>
-    <p>{{ book.summary }}</p>
+    {{ book.summary|safe }}
 {% endif %}
 {% if book.instances.all %}
 <h2>Instances</h2>
