@@ -57,7 +57,7 @@ ul.card-list {
     margin: 1rem;
     gap: 1rem;
 }
-ul.nice-list {
+ul.nice-list, ul.errorlist {
     display: flex;
     flex-direction: column;
     list-style-type: none;
@@ -68,7 +68,7 @@ ul.nice-list {
     background-color: #c0c0c0;
     box-shadow: 1px 3px 5px #00000033;
 }
-ul.nice-list li {
+ul.nice-list li, ul.errorlist li {
     margin: 0.25rem 0;
     padding: 0.25rem 0.5rem;
     border-bottom: 1px solid #ccaa77;
@@ -139,4 +139,10 @@ img.book-cover {
     border: 2px solid #999999;
     border-radius: 1rem;
     max-width: calc(100% - 2rem);
+}
+ul.errorlist {
+    background-color: #e0c0c0;
+}
+ul li.spacer {
+    flex-grow: 1
 }
