@@ -17,6 +17,9 @@
             <li><a href="{% url "books" %}">Books</a></li>
             <li class="spacer"></li>
             {% if user.is_authenticated %}
+                {% if user.is_superuser or user.is_staff %}
+                    <li><a href="{% url "admin:index" %}">Admin</a></li>
+                {% endif %}
                 <li><a href="{% url "logout" %}">Logout</a></li>
             {% else %}
                 <li><a href="{% url "login" %}">Login</a></li>
