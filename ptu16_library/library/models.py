@@ -24,6 +24,7 @@ class Genre(models.Model):
     def get_absolute_url(self):
         return reverse("genre_detail", kwargs={"pk": self.pk})
 
+
 class Author(models.Model):
     first_name = models.CharField(_("first name"), max_length=100, db_index=True)
     last_name = models.CharField(_("last name"), max_length=100, db_index=True)
@@ -74,6 +75,39 @@ class Book(models.Model):
     def display_genre(self):
         return ",".join(genre.name for genre in self.genre.all()[:3])
     display_genre.short_description = _('genre')
+
+
+class BookReview(models.Model):
+    book = models.ForeignKey(
+        Book, 
+        verbose_name=_("book"), 
+        on_delete=models.CASCADE,
+        related_name='reviews',
+    )
+    reviewer = models.ForeignKey(
+        User, 
+        verbose_name=_("reviewer"), 
+        on_delete=models.CASCADE,
+        related_name='book_reviews',
+    )
+    content = models.TextField(_("Content"), max_length=4000)
+    created_at = models.DateTimeField(
+        _("created at"), 
+        auto_now_add=True, 
+        db_index=True
+    )
+
+    class Meta:
+        verbose_name = _("book review")
+        verbose_name_plural = _("book reviews")
+        ordering = ['-created_at']
+
+    def __str__(self):
+        return f"{self.book} review by {self.reviewer}"
+
+    def get_absolute_url(self):
+        return reverse("bookreview_detail", kwargs={"pk": self.pk})
+
 
 LOAN_STATUS = (
     (0, _("available")),

@@ -1,11 +1,13 @@
 from typing import Any
-from django.core.paginator import Paginator
+from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpRequest
+from django.core.paginator import Paginator
 from django.db.models.query import QuerySet, Q
+from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
-from . import models
+from django.urls import reverse
+from . import models, forms
 
 
 class UserBookListView(LoginRequiredMixin, generic.ListView):
@@ -39,9 +41,35 @@ class BookListView(generic.ListView):
             )
         return queryset
 
-class BookDetailView(generic.DetailView):
+
+class BookDetailView(generic.edit.FormMixin, generic.DetailView):
     model = models.Book
     template_name = 'library/book_detail.html'
+    form_class = forms.BookReviewForm
+
+    def get_initial(self) -> dict[str, Any]:
+        initial = super().get_initial()
+        initial['book'] = self.get_object()
+        initial['reviewer'] = self.request.user
+        return initial
+
+    def post(self, *args, **kwargs) -> HttpResponse:
+        self.object = self.get_object()
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form) -> HttpResponse:
+        form.instance.book = self.object
+        form.instance.reviewer = self.request.user
+        form.save()
+        messages.success(self.request, 'Review posted successfully.')
+        return super().form_valid(form)
+
+    def get_success_url(self) -> str:
+        return reverse('book_detail', kwargs={'pk': self.object.pk})
 
 
 def index(request: HttpRequest):

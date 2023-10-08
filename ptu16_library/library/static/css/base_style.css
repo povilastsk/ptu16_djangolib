@@ -84,8 +84,8 @@ ul.card-list h4 {
     margin: 1rem;
     font-size: large;
 }
-ul.card-list li:hover {
-    background-color: #e0e0e0;
+ul.nice-list h4 {
+    border-bottom: 2px solid #ccaa77;
 }
 a {
     color: #cb5800;
@@ -169,4 +169,7 @@ div.box {
 }
 .box-debug {
     background-color: #a8a8a8;
+}
+.float-right {
+    float: right;
 }
