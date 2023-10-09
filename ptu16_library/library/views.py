@@ -1,4 +1,5 @@
 from typing import Any
+from datetime import date, timedelta
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
@@ -6,9 +7,37 @@ from django.db.models.query import QuerySet, Q
 from django.http import HttpRequest, HttpResponse
 from django.shortcuts import render, get_object_or_404
 from django.views import generic
-from django.urls import reverse
+from django.urls import reverse_lazy
 from . import models, forms
 
+
+class UserBookReserveView(LoginRequiredMixin, generic.CreateView):
+    model = models.BookInstance
+    form_class = forms.BookInstanceForm
+    success_url = reverse_lazy('user_books')
+    template_name = 'library/user_book_form.html'
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['book'] = get_object_or_404(models.Book, pk=self.kwargs['book_pk'])
+        return context
+
+    def get_initial(self) -> dict[str, Any]:
+        initial = super().get_initial()
+        initial['book'] = get_object_or_404(models.Book, pk=self.kwargs['book_pk'])
+        initial['status'] = 1
+        initial['reader'] = self.request.user
+        initial['due_back'] = date.today() + timedelta(days=7)
+        return initial
+
+    def form_valid(self, form: forms.BookInstanceForm) -> HttpResponse:
+        form.instance.book = get_object_or_404(models.Book, pk=self.kwargs['book_pk'])
+        form.instance.status = 1
+        form.instance.reader = self.request.user
+        messages.success(self.request, f"""{form.instance.book} is reserved 
+as {form.instance.unique_id} for you until {form.instance.due_back}.""")
+        return super().form_valid(form)
+    
 
 class UserBookListView(LoginRequiredMixin, generic.ListView):
     model = models.BookInstance
@@ -61,7 +90,7 @@ class BookDetailView(generic.edit.FormMixin, generic.DetailView):
         else:
             return self.form_invalid(form)
 
-    def form_valid(self, form) -> HttpResponse:
+    def form_valid(self, form: forms.BookReviewForm) -> HttpResponse:
         form.instance.book = self.object
         form.instance.reviewer = self.request.user
         form.save()
@@ -69,7 +98,7 @@ class BookDetailView(generic.edit.FormMixin, generic.DetailView):
         return super().form_valid(form)
 
     def get_success_url(self) -> str:
-        return reverse('book_detail', kwargs={'pk': self.object.pk})
+        return reverse_lazy('book_detail', kwargs={'pk': self.object.pk})
 
 
 def index(request: HttpRequest):

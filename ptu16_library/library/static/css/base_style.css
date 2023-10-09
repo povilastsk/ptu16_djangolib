@@ -173,3 +173,18 @@ div.box {
 .float-right {
     float: right;
 }
+a.btn {
+    border: 1px solid #999999;
+    background-color: #cccccc;
+    border-radius: 1rem;
+    padding: 0.25rem;
+}
+a.btn:hover {
+    background-color: #e8e8e8;
+}
+.is-overdue {
+    background-color: #fec0c0 !important;
+}
+.is-overdue:hover{
+    background-color: #ffcccc !important;
+}

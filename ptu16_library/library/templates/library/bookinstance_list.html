@@ -11,7 +11,7 @@
             <th>Copy ID</th>
         </tr>
     {% for bookinstance in bookinstance_list %}
-        <tr class="data-row">
+    <tr class="data-row {% if bookinstance.is_overdue %}is-overdue{% endif %}">
             <td>{{ bookinstance.due_back }}</td>
             <td>{{ bookinstance.get_status_display }}</td>
             <td><a href="{% url "book_detail" bookinstance.book.pk %}">{{ bookinstance.book }}</a></td>
