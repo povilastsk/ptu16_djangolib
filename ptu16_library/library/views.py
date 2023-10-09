@@ -1,7 +1,7 @@
 from typing import Any
 from datetime import date, timedelta
 from django.contrib import messages
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.core.paginator import Paginator
 from django.db.models.query import QuerySet, Q
 from django.http import HttpRequest, HttpResponse
@@ -9,6 +9,62 @@ from django.shortcuts import render, get_object_or_404
 from django.views import generic
 from django.urls import reverse_lazy
 from . import models, forms
+
+
+class UserBookReturnCancelView(LoginRequiredMixin, UserPassesTestMixin, generic.DeleteView):
+    model = models.BookInstance
+    success_url = reverse_lazy('user_books')
+    template_name = 'library/user_book_return.html'
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        if self.object.status == 1:
+            context['action'] = 'cancel'
+        else:
+            context['action'] = 'return'
+        return context
+
+    def test_func(self) -> bool | None:
+        self.object = self.get_object()
+        return self.request.user == self.object.reader
+    
+    def get_success_url(self) -> str:
+        messages.success(self.request, f"{self.object.book} with unique ID {self.object.unique_id} successfully returned or cancelled.")
+        return super().get_success_url()
+
+
+class UserBookTakeExtendView(LoginRequiredMixin, UserPassesTestMixin, generic.UpdateView):
+    model = models.BookInstance
+    form_class = forms.BookInstanceForm
+    success_url = reverse_lazy('user_books')
+    template_name = 'library/user_book_form.html'
+
+    def test_func(self) -> bool | None:
+        self.object = self.get_object()
+        return self.request.user == self.object.reader
+
+    def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
+        context = super().get_context_data(**kwargs)
+        context['book'] = self.object.book
+        if self.object.status == 1:
+            context['action'] = 'take'
+        else:
+            context['action'] = 'extend'
+        return context
+
+    def get_initial(self) -> dict[str, Any]:
+        initial = super().get_initial()
+        initial['status'] = 2
+        initial['due_back'] = date.today() + timedelta(days=14)
+        return initial
+
+    def form_valid(self, form: forms.BookInstanceForm) -> HttpResponse:
+        form.instance.book = self.object.book
+        form.instance.status = 2
+        form.instance.reader = self.request.user
+        messages.success(self.request, f"""{form.instance.book} is taken 
+as {form.instance.unique_id} until {form.instance.due_back}.""")
+        return super().form_valid(form)
 
 
 class UserBookReserveView(LoginRequiredMixin, generic.CreateView):
@@ -20,6 +76,7 @@ class UserBookReserveView(LoginRequiredMixin, generic.CreateView):
     def get_context_data(self, **kwargs: Any) -> dict[str, Any]:
         context = super().get_context_data(**kwargs)
         context['book'] = get_object_or_404(models.Book, pk=self.kwargs['book_pk'])
+        context['action'] = 'Reserve'
         return context
 
     def get_initial(self) -> dict[str, Any]:
@@ -29,7 +86,7 @@ class UserBookReserveView(LoginRequiredMixin, generic.CreateView):
         initial['reader'] = self.request.user
         initial['due_back'] = date.today() + timedelta(days=7)
         return initial
-
+    
     def form_valid(self, form: forms.BookInstanceForm) -> HttpResponse:
         form.instance.book = get_object_or_404(models.Book, pk=self.kwargs['book_pk'])
         form.instance.status = 1
@@ -37,11 +94,11 @@ class UserBookReserveView(LoginRequiredMixin, generic.CreateView):
         messages.success(self.request, f"""{form.instance.book} is reserved 
 as {form.instance.unique_id} for you until {form.instance.due_back}.""")
         return super().form_valid(form)
-    
+
 
 class UserBookListView(LoginRequiredMixin, generic.ListView):
     model = models.BookInstance
-    template_name = "library/book_user_list.html"
+    template_name = 'library/book_user_list.html'
     paginate_by = 10
 
     def get_queryset(self) -> QuerySet[Any]:
@@ -49,7 +106,7 @@ class UserBookListView(LoginRequiredMixin, generic.ListView):
         queryset = queryset.filter(reader=self.request.user)
         return queryset
 
-    
+
 class BookListView(generic.ListView):
     model = models.Book
     template_name = 'library/book_list.html'
@@ -96,7 +153,7 @@ class BookDetailView(generic.edit.FormMixin, generic.DetailView):
         form.save()
         messages.success(self.request, 'Review posted successfully.')
         return super().form_valid(form)
-
+    
     def get_success_url(self) -> str:
         return reverse_lazy('book_detail', kwargs={'pk': self.object.pk})
 

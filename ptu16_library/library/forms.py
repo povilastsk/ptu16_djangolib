@@ -2,6 +2,10 @@ from django import forms
 from . import models
 
 
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
+
 class BookReviewForm(forms.ModelForm):
     class Meta:
         model = models.BookReview
@@ -23,6 +27,7 @@ class BookInstanceForm(forms.ModelForm):
             'book': forms.HiddenInput(),
             'status': forms.HiddenInput(),
             'reader': forms.HiddenInput(),
+            'due_back': DateInput(),
         }
         labels = {
             'due_back': 'until'

@@ -4,7 +4,7 @@
 <h1>{{ action|capfirst }} a book</h1>
 <form method="post" action="{{ request.path }}">
     {% csrf_token %}
-    <p>Book: {{ book }}</p>
+    <p>Book: {{ object.book }}</p>
     {{ form.as_p }}
     <p><button type="submit">{{ action|capfirst }}</button> 
         <a href="{% if object %}{% url "user_books" %}{% else %}{% url "book_detail" book.pk %}{% endif %}">Changed my mind</a></p>
