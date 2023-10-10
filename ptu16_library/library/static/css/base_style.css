@@ -192,3 +192,9 @@ a.btn:hover {
 .is-overdue:hover{
     background-color: #ffcccc !important;
 }
+.profile-photo {
+    max-width: (100% -2rem);
+    margin: 1rem;
+    width: 500px;
+    border: 2px solid #a09933
+}
